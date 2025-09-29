@@ -57,12 +57,21 @@ const App: React.FC = () => {
         const maxW = window.innerWidth - 40;
         const maxH = window.innerHeight - 40;
         
-        let effectiveWidth = Math.min(windowSize, maxW);
-        let effectiveHeight = effectiveWidth / aspectRatio;
+        let effectiveWidth: number;
+        let effectiveHeight: number;
 
-        if (effectiveHeight > maxH) {
-            effectiveHeight = maxH;
-            effectiveWidth = effectiveHeight * aspectRatio;
+        if (windowStyle === WindowStyle.ELLIPSE) {
+            const size = Math.min(windowSize, maxW, maxH);
+            effectiveWidth = size;
+            effectiveHeight = size;
+        } else {
+            effectiveWidth = Math.min(windowSize, maxW);
+            effectiveHeight = effectiveWidth / aspectRatio;
+
+            if (effectiveHeight > maxH) {
+                effectiveHeight = maxH;
+                effectiveWidth = effectiveHeight * aspectRatio;
+            }
         }
 
         setWindowPosition({
@@ -393,13 +402,23 @@ const App: React.FC = () => {
   
   const maxW = window.innerWidth - 40;
   const maxH = window.innerHeight - 40;
-  let effectiveWidth = Math.min(windowSize, maxW);
-  let effectiveHeight = effectiveWidth / aspectRatio;
+  let effectiveWidth: number;
+  let effectiveHeight: number;
 
-  if (effectiveHeight > maxH) {
-    effectiveHeight = maxH;
-    effectiveWidth = effectiveHeight * aspectRatio;
+  if (windowStyle === WindowStyle.ELLIPSE) {
+      const size = Math.min(windowSize, maxW, maxH);
+      effectiveWidth = size;
+      effectiveHeight = size;
+  } else {
+      effectiveWidth = Math.min(windowSize, maxW);
+      effectiveHeight = effectiveWidth / aspectRatio;
+
+      if (effectiveHeight > maxH) {
+          effectiveHeight = maxH;
+          effectiveWidth = effectiveHeight * aspectRatio;
+      }
   }
+
 
   const windowContainerStyle: React.CSSProperties = {
     opacity,

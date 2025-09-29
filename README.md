@@ -10,7 +10,7 @@ All video processing is done client-side in your browser. Your webcam feed is ne
 *   **Privacy First**: Your video feed never leaves your computer.
 *   **Multiple Display Modes**:
     *   **Picture Mode**: Control how the video fits the window (`Zoom`, `Stretch`, `Center`, `Alt.Stretch`).
-    *   **Window Style**: View your camera in a `Normal` window, `Full Screen`, or in draggable shapes like `Ellipse`, `Rectangle`, and `Rounded`.
+    *   **Window Style**: View your camera in a `Normal` window, `Full Screen`, or in draggable shapes like `Circle`, `Rectangle`, and `Rounded`.
 *   **Transform Controls**:
     *   Flip the video horizontally or vertically.
     *   Zoom in and out of the video feed.
@@ -31,7 +31,7 @@ All video processing is done client-side in your browser. Your webcam feed is ne
 | `C` | Set Picture Mode to 'Center' |
 | `A` | Set Picture Mode to 'Alt.Stretch' |
 | `N` / `Esc` | Set Window Style to 'Normal' |
-| `E` | Set Window Style to 'Ellipse' |
+| `E` | Set Window Style to 'Circle' |
 | `R` | Set Window Style to 'Rectangle' |
 | `W` | Set Window Style to 'Rounded' |
 | `F` | Toggle 'Full Screen' |

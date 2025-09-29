@@ -31,7 +31,7 @@ const pictureModeOptions = {
 
 const windowStyleOptions = {
     [WindowStyle.NORMAL]: { label: 'Normal', icon: <NormalWindowIcon />, shortcut: 'N/Esc' },
-    [WindowStyle.ELLIPSE]: { label: 'Ellipse', icon: <EllipseIcon />, shortcut: 'E' },
+    [WindowStyle.ELLIPSE]: { label: 'Circle', icon: <EllipseIcon />, shortcut: 'E' },
     [WindowStyle.RECTANGLE]: { label: 'Rectangle', icon: <RectangleIcon />, shortcut: 'R' },
     [WindowStyle.ROUNDED]: { label: 'Rounded', icon: <RoundedRectangleIcon />, shortcut: 'W' },
     [WindowStyle.FULLSCREEN]: { label: 'Full Screen', icon: <FullscreenIcon />, shortcut: 'F' },
