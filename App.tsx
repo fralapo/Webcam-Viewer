@@ -25,8 +25,6 @@ const App: React.FC = () => {
   const [flipHorizontal, setFlipHorizontal] = useState(false);
   const [flipVertical, setFlipVertical] = useState(false);
   const [zoom, setZoom] = useState(1);
-  const [viewMode, setViewMode] = useState<'video' | 'clipboard'>('video');
-  const [clipboardImageSrc, setClipboardImageSrc] = useState<string | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [shortcutsEnabled, setShortcutsEnabled] = useState(true);
@@ -229,63 +227,11 @@ const App: React.FC = () => {
     });
   }, [captureFrameAsBlob, showToast]);
 
-  const handleViewClipboard = useCallback(async () => {
-    try {
-      const items = await navigator.clipboard.read();
-      for (const item of items) {
-        const imageType = item.types.find(type => type.startsWith('image/'));
-        if (imageType) {
-          const blob = await item.getType(imageType);
-          const src = URL.createObjectURL(blob);
-          if (clipboardImageSrc) {
-            URL.revokeObjectURL(clipboardImageSrc);
-          }
-          setClipboardImageSrc(src);
-          setViewMode('clipboard');
-          return;
-        }
-      }
-      showToast('No image found on clipboard');
-    } catch (err) {
-      console.error('Failed to read clipboard:', err);
-      showToast('Could not read from clipboard');
-    }
-  }, [clipboardImageSrc, showToast]);
-
-  const resumeVideo = useCallback(() => {
-    setViewMode('video');
-    if (clipboardImageSrc) {
-      URL.revokeObjectURL(clipboardImageSrc);
-      setClipboardImageSrc(null);
-    }
-  }, [clipboardImageSrc]);
-  
-  const handleToggleAlwaysOnTop = useCallback(() => {
-    if (!videoRef.current) return;
-    if (document.pictureInPictureElement) {
-        document.exitPictureInPicture().catch(err => console.error("PiP Error:", err));
-    } else {
-        videoRef.current.requestPictureInPicture().catch(err => console.error("PiP Error:", err));
-    }
-  }, []);
-
   const handleSetWindowStyle = (style: WindowStyle) => {
-    // Preserve size when transitioning from a full-window mode to a fixed-size mode
-    if (
-      [WindowStyle.NORMAL, WindowStyle.FULLSCREEN].includes(windowStyle) &&
-      [WindowStyle.ELLIPSE, WindowStyle.RECTANGLE, WindowStyle.ROUNDED].includes(style) &&
-      windowRef.current
-    ) {
-      setWindowSize(windowRef.current.offsetWidth);
-    }
-
-    // Handle Fullscreen API
     if (style === WindowStyle.FULLSCREEN) {
       if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen().catch(err => console.error("Fullscreen request failed:", err));
       }
-    // Fix: Removed redundant `style !== WindowStyle.FULLSCREEN` check which was likely confusing the TypeScript compiler.
-    // The logic is equivalent since this is an `else if` branch.
     } else if (windowStyle === WindowStyle.FULLSCREEN) {
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(err => console.error("Exit fullscreen failed:", err));
@@ -295,12 +241,14 @@ const App: React.FC = () => {
     setWindowStyle(style);
   };
 
+  const handleIncreaseWindowSize = () => setWindowSize(s => s + WINDOW_SIZE_STEP);
+  const handleDecreaseWindowSize = () => setWindowSize(s => Math.max(150, s - WINDOW_SIZE_STEP));
+
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!shortcutsEnabled) return;
     
     if (e.ctrlKey) {
       if (e.key === 'c' || e.key === 'C') { e.preventDefault(); handleCopyFrame(); }
-      if (e.key === 'v' || e.key === 'V') { e.preventDefault(); handleViewClipboard(); }
       return;
     }
 
@@ -325,14 +273,14 @@ const App: React.FC = () => {
       case 'arrowdown': setOpacity(o => Math.max(0.2, o - OPACITY_STEP)); break;
       case 'arrowright': setOpacity(1); break;
       case 'arrowleft': setOpacity(0.2); break;
+      case '+': handleIncreaseWindowSize(); break;
+      case '-': handleDecreaseWindowSize(); break;
       case 'i': handleCopyFrame(); break;
-      case 'g': handleViewClipboard(); break;
       case 'd': handleDelayedCopyFrame(); break;
       case 'pageup': setZoom(z => Math.min(5, z + ZOOM_STEP)); break;
       case 'pagedown': setZoom(z => Math.max(0.1, z - ZOOM_STEP)); break;
-      case 't': handleToggleAlwaysOnTop(); break;
     }
-  }, [handleCopyFrame, handleViewClipboard, handleDelayedCopyFrame, handleToggleAlwaysOnTop, shortcutsEnabled]);
+  }, [handleCopyFrame, handleDelayedCopyFrame, shortcutsEnabled]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -435,25 +383,6 @@ const App: React.FC = () => {
     borderRadius: windowStyle === WindowStyle.ELLIPSE ? '50%' : (windowStyle === WindowStyle.ROUNDED ? '2rem' : '0'),
   };
 
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-900 text-center p-4">
-        <div>
-          <h1 className="text-2xl font-bold text-red-500 mb-2">Camera Error</h1>
-          <p className="text-gray-300">{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!stream) {
-    return (
-      <div className="flex items-center justify-center h-screen bg-gray-900">
-        <p className="text-xl animate-pulse">Initializing Camera...</p>
-      </div>
-    );
-  }
-
   return (
     <div className="w-screen h-screen bg-black overflow-hidden relative group">
       <div 
@@ -462,8 +391,13 @@ const App: React.FC = () => {
         style={windowContainerStyle}
         onMouseDown={handleMouseDown}
         >
-          <div className="w-full h-full overflow-hidden transition-all duration-300" style={clippingMaskStyle}>
-            {viewMode === 'video' ? (
+          <div className="w-full h-full overflow-hidden transition-all duration-300 bg-gray-900 flex items-center justify-center" style={clippingMaskStyle}>
+            {error ? (
+              <div className="text-center p-4">
+                <h1 className="text-2xl font-bold text-red-500 mb-2">Camera Error</h1>
+                <p className="text-gray-300">{error}</p>
+              </div>
+            ) : stream ? (
               <video
                 ref={videoRef}
                 autoPlay
@@ -473,12 +407,7 @@ const App: React.FC = () => {
                 onLoadedMetadata={handleVideoMetadata}
               />
             ) : (
-              <img
-                src={clipboardImageSrc || ''}
-                alt="From clipboard"
-                className="w-full h-full"
-                style={{ objectFit: pictureMode }}
-              />
+              <p className="text-xl animate-pulse">Initializing Camera...</p>
             )}
           </div>
       </div>
@@ -499,7 +428,6 @@ const App: React.FC = () => {
           currentDeviceId={currentDeviceId}
           onSwitchCamera={(id) => {
               setCurrentDeviceId(id);
-              resumeVideo();
           }}
           pictureMode={pictureMode}
           onSetPictureMode={setPictureMode}
@@ -511,15 +439,15 @@ const App: React.FC = () => {
           onToggleFlipVertical={() => setFlipVertical(f => !f)}
           onCopyFrame={handleCopyFrame}
           onDelayedCopyFrame={handleDelayedCopyFrame}
-          onViewClipboard={handleViewClipboard}
           onZoomIn={() => setZoom(z => Math.min(5, z + ZOOM_STEP))}
           onZoomOut={() => setZoom(z => Math.max(0.1, z - ZOOM_STEP))}
           onIncreaseOpacity={() => setOpacity(o => Math.min(1, o + OPACITY_STEP))}
           onDecreaseOpacity={() => setOpacity(o => Math.max(0.2, o - OPACITY_STEP))}
           onSetOpacity={setOpacity}
-          onToggleAlwaysOnTop={handleToggleAlwaysOnTop}
           shortcutsEnabled={shortcutsEnabled}
           onToggleShortcuts={() => setShortcutsEnabled(s => !s)}
+          onIncreaseWindowSize={handleIncreaseWindowSize}
+          onDecreaseWindowSize={handleDecreaseWindowSize}
           />
       )}
       

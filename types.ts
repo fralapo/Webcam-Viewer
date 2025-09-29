@@ -31,10 +31,10 @@ export interface ContextMenuProps {
   onSetOpacity: (opacity: number) => void;
   onCopyFrame: () => void;
   onDelayedCopyFrame: () => void;
-  onViewClipboard: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
-  onToggleAlwaysOnTop: () => void;
   shortcutsEnabled: boolean;
   onToggleShortcuts: () => void;
+  onIncreaseWindowSize: () => void;
+  onDecreaseWindowSize: () => void;
 }

@@ -18,8 +18,7 @@ All video processing is done client-side in your browser. Your webcam feed is ne
 *   **Clipboard Integration**:
     *   Copy the current frame to the clipboard instantly.
     *   Copy with a 5-second delay.
-    *   View an image directly from your clipboard.
-*   **Always on Top**: Use the browser's Picture-in-Picture feature to keep the webcam view on top of other windows.
+*   **Resizable Window**: Easily increase or decrease the size of the shaped window modes (`Circle`, `Rectangle`, `Rounded`).
 *   **Keyboard Shortcuts**: A comprehensive set of shortcuts for quick access to all features.
 
 ## Keyboard Shortcuts
@@ -31,9 +30,9 @@ All video processing is done client-side in your browser. Your webcam feed is ne
 | `C` | Set Picture Mode to 'Center' |
 | `A` | Set Picture Mode to 'Alt.Stretch' |
 | `N` / `Esc` | Set Window Style to 'Normal' |
-| `E` | Set Window Style to 'Circle' |
-| `R` | Set Window Style to 'Rectangle' |
-| `W` | Set Window Style to 'Rounded' |
+| `E` | Set Picture Mode to 'Circle' |
+| `R` | Set Picture Mode to 'Rectangle' |
+| `W` | Set Picture Mode to 'Rounded' |
 | `F` | Toggle 'Full Screen' |
 | `H` | Toggle Horizontal Flip |
 | `V` | Toggle Vertical Flip |
@@ -41,9 +40,9 @@ All video processing is done client-side in your browser. Your webcam feed is ne
 | `ArrowDown` | Decrease Opacity |
 | `ArrowRight` | Set Opacity to Max (100%) |
 | `ArrowLeft` | Set Opacity to Min (20%) |
+| `+` | Increase Window Size |
+| `-` | Decrease Window Size |
 | `PgUp` | Zoom In |
 | `PgDown` | Zoom Out |
 | `I` / `Ctrl+C` | Copy Frame to Clipboard |
 | `D` | Copy Frame with 5s Delay |
-| `G` / `Ctrl+V` | View Image from Clipboard |
-| `T` | Toggle Always on Top (PiP) |

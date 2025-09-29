@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import type { ContextMenuProps } from '../types';
 import { PictureMode, WindowStyle } from '../types';
-import { CameraIcon, StretchIcon, CenterIcon, ContainIcon, CoverIcon, FlipHorizontalIcon, FlipVerticalIcon, CopyIcon, ClipboardIcon, TimerIcon, ZoomInIcon, ZoomOutIcon, CheckIcon, RectangleIcon, EllipseIcon, RoundedRectangleIcon, FullscreenIcon, NormalWindowIcon, OpacityUpIcon, OpacityDownIcon, OpacityMaxIcon, OpacityMinIcon, EnlargeIcon, ShrinkIcon, PinTopIcon, KeyboardIcon, ChevronRightIcon } from './Icons';
+import { CameraIcon, StretchIcon, CenterIcon, ContainIcon, CoverIcon, FlipHorizontalIcon, FlipVerticalIcon, CopyIcon, TimerIcon, ZoomInIcon, ZoomOutIcon, CheckIcon, RectangleIcon, EllipseIcon, RoundedRectangleIcon, FullscreenIcon, NormalWindowIcon, OpacityUpIcon, OpacityDownIcon, OpacityMaxIcon, OpacityMinIcon, EnlargeIcon, ShrinkIcon, KeyboardIcon, ChevronRightIcon } from './Icons';
 import ContextMenuDropdown from './ContextMenuDropdown';
 
 const ContextMenuItem: React.FC<{ onClick: () => void; children: React.ReactNode; shortcut?: string; selected?: boolean; disabled?: boolean; }> = ({ onClick, children, shortcut, selected, disabled }) => (
@@ -42,8 +42,8 @@ const ContextMenu: React.FC<ContextMenuProps> = (props) => {
     onClose, devices, currentDeviceId, onSwitchCamera, pictureMode, onSetPictureMode,
     windowStyle, onSetWindowStyle, flipHorizontal, onToggleFlipHorizontal, flipVertical, onToggleFlipVertical,
     onIncreaseOpacity, onDecreaseOpacity, onSetOpacity, onCopyFrame, onDelayedCopyFrame,
-    onViewClipboard, onZoomIn, onZoomOut, onToggleAlwaysOnTop,
-    shortcutsEnabled, onToggleShortcuts
+    onZoomIn, onZoomOut, shortcutsEnabled, onToggleShortcuts,
+    onIncreaseWindowSize, onDecreaseWindowSize
   } = props;
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -140,6 +140,11 @@ const ContextMenu: React.FC<ContextMenuProps> = (props) => {
       <ContextMenuItem onClick={() => handleAction(onZoomIn)} shortcut="PgUp"><ZoomInIcon /> Zoom In</ContextMenuItem>
       <ContextMenuItem onClick={() => handleAction(onZoomOut)} shortcut="PgDn"><ZoomOutIcon /> Zoom Out</ContextMenuItem>
       <ContextMenuSeparator />
+
+      <div className="text-xs text-gray-400 px-4 pt-1 pb-2 font-semibold">WINDOW SIZE</div>
+      <ContextMenuItem onClick={() => handleAction(onIncreaseWindowSize)} shortcut="+" disabled={!isFixedWindow}><EnlargeIcon /> Increase</ContextMenuItem>
+      <ContextMenuItem onClick={() => handleAction(onDecreaseWindowSize)} shortcut="-" disabled={!isFixedWindow}><ShrinkIcon /> Decrease</ContextMenuItem>
+      <ContextMenuSeparator />
       
       <div className="text-xs text-gray-400 px-4 pt-1 pb-2 font-semibold">OPACITY</div>
       <ContextMenuItem onClick={() => handleAction(onIncreaseOpacity)} shortcut="Up"><OpacityUpIcon /> Increase</ContextMenuItem>
@@ -151,8 +156,6 @@ const ContextMenu: React.FC<ContextMenuProps> = (props) => {
       <div className="text-xs text-gray-400 px-4 pt-1 pb-2 font-semibold">ACTIONS</div>
       <ContextMenuItem onClick={() => handleAction(onCopyFrame)} shortcut="I / C-C"><CopyIcon /> Copy Frame</ContextMenuItem>
       <ContextMenuItem onClick={() => handleAction(onDelayedCopyFrame)} shortcut="D"><TimerIcon /> Copy with 5s Delay</ContextMenuItem>
-      <ContextMenuItem onClick={() => handleAction(onViewClipboard)} shortcut="G / C-V"><ClipboardIcon /> View Clipboard</ContextMenuItem>
-      <ContextMenuItem onClick={() => handleAction(onToggleAlwaysOnTop)} shortcut="T"><PinTopIcon /> Always on Top</ContextMenuItem>
     </div>
   );
 };
