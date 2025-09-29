@@ -109,30 +109,6 @@ export const CheckIcon: React.FC = () => (
     </IconWrapper>
 );
 
-export const RectangleIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 3v18h14V3H5z" />
-        </svg>
-    </IconWrapper>
-);
-
-export const EllipseIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <circle cx="12" cy="12" r="9" />
-        </svg>
-    </IconWrapper>
-);
-
-export const RoundedRectangleIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <rect x="3" y="3" width="18" height="18" rx="5" />
-        </svg>
-    </IconWrapper>
-);
-
 export const FullscreenIcon: React.FC = () => (
     <IconWrapper>
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -145,54 +121,6 @@ export const NormalWindowIcon: React.FC = () => (
     <IconWrapper>
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M4 4h16v16H4V4zm0 4h16" />
-        </svg>
-    </IconWrapper>
-);
-
-export const OpacityUpIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 19V5m0 0l-4 4m4-4l4 4" />
-        </svg>
-    </IconWrapper>
-);
-
-export const OpacityDownIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 5v14m0 0l-4-4m4 4l4-4" />
-        </svg>
-    </IconWrapper>
-);
-
-export const OpacityMaxIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" />
-        </svg>
-    </IconWrapper>
-);
-
-export const OpacityMinIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14" strokeDasharray="2 2" />
-        </svg>
-    </IconWrapper>
-);
-
-export const EnlargeIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 4h7v7H4V4zm0 9h7v7H4v-7zm9-9h7v7h-7V4zm9 9h-7v7h7v-7z" />
-        </svg>
-    </IconWrapper>
-);
-
-export const ShrinkIcon: React.FC = () => (
-    <IconWrapper>
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 7h3v3H7V7zm0 7h3v3H7v-3zm7-7h3v3h-3V7zm0 7h3v3h-3v-3z" transform="scale(0.8) translate(2,2)" />
         </svg>
     </IconWrapper>
 );

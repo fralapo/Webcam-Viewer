@@ -10,15 +10,13 @@ All video processing is done client-side in your browser. Your webcam feed is ne
 *   **Privacy First**: Your video feed never leaves your computer.
 *   **Multiple Display Modes**:
     *   **Picture Mode**: Control how the video fits the window (`Zoom`, `Stretch`, `Center`, `Alt.Stretch`).
-    *   **Window Style**: View your camera in a `Normal` window, `Full Screen`, or in draggable shapes like `Circle`, `Rectangle`, and `Rounded`.
+    *   **Window Style**: View your camera in a `Normal` window or `Full Screen`.
 *   **Transform Controls**:
     *   Flip the video horizontally or vertically.
     *   Zoom in and out of the video feed.
-*   **Opacity Control**: Make the window semi-transparent to see what's behind it.
 *   **Clipboard Integration**:
     *   Copy the current frame to the clipboard instantly.
     *   Copy with a 5-second delay.
-*   **Resizable Window**: Easily increase or decrease the size of the shaped window modes (`Circle`, `Rectangle`, `Rounded`).
 *   **Keyboard Shortcuts**: A comprehensive set of shortcuts for quick access to all features.
 
 ## Keyboard Shortcuts
@@ -30,19 +28,10 @@ All video processing is done client-side in your browser. Your webcam feed is ne
 | `C` | Set Picture Mode to 'Center' |
 | `A` | Set Picture Mode to 'Alt.Stretch' |
 | `N` / `Esc` | Set Window Style to 'Normal' |
-| `E` | Set Picture Mode to 'Circle' |
-| `R` | Set Picture Mode to 'Rectangle' |
-| `W` | Set Picture Mode to 'Rounded' |
 | `F` | Toggle 'Full Screen' |
 | `H` | Toggle Horizontal Flip |
 | `V` | Toggle Vertical Flip |
-| `ArrowUp` | Increase Opacity |
-| `ArrowDown` | Decrease Opacity |
-| `ArrowRight` | Set Opacity to Max (100%) |
-| `ArrowLeft` | Set Opacity to Min (20%) |
-| `+` | Increase Window Size |
-| `-` | Decrease Window Size |
 | `PgUp` | Zoom In |
 | `PgDown` | Zoom Out |
-| `I` / `Ctrl+C` | Copy Frame to Clipboard |
+| `I` | Copy Frame to Clipboard |
 | `D` | Copy Frame with 5s Delay |

@@ -7,9 +7,6 @@ export enum PictureMode {
 
 export enum WindowStyle {
   NORMAL = 'normal',
-  ELLIPSE = 'ellipse',
-  RECTANGLE = 'rectangle',
-  ROUNDED = 'rounded',
   FULLSCREEN = 'fullscreen',
 }
 
@@ -26,15 +23,10 @@ export interface ContextMenuProps {
   onToggleFlipHorizontal: () => void;
   flipVertical: boolean;
   onToggleFlipVertical: () => void;
-  onIncreaseOpacity: () => void;
-  onDecreaseOpacity: () => void;
-  onSetOpacity: (opacity: number) => void;
   onCopyFrame: () => void;
   onDelayedCopyFrame: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   shortcutsEnabled: boolean;
   onToggleShortcuts: () => void;
-  onIncreaseWindowSize: () => void;
-  onDecreaseWindowSize: () => void;
 }

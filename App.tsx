@@ -4,14 +4,11 @@ import ContextMenu from './components/ContextMenu';
 import { SettingsIcon } from './components/Icons';
 
 const ZOOM_STEP = 0.1;
-const OPACITY_STEP = 0.1;
-const WINDOW_SIZE_STEP = 50;
 const TOAST_DURATION = 3000;
 
 const App: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const windowRef = useRef<HTMLDivElement>(null);
   const toastTimeoutRef = useRef<number | null>(null);
   const countdownIntervalRef = useRef<number | null>(null);
 
@@ -19,7 +16,6 @@ const App: React.FC = () => {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [currentDeviceId, setCurrentDeviceId] = useState<string | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
-  const [aspectRatio, setAspectRatio] = useState(16/9);
 
   const [pictureMode, setPictureMode] = useState<PictureMode>(PictureMode.COVER);
   const [flipHorizontal, setFlipHorizontal] = useState(false);
@@ -31,11 +27,6 @@ const App: React.FC = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   
   const [windowStyle, setWindowStyle] = useState<WindowStyle>(WindowStyle.NORMAL);
-  const [opacity, setOpacity] = useState(1);
-  const [windowSize, setWindowSize] = useState(500);
-  const [isDragging, setIsDragging] = useState(false);
-  const [windowPosition, setWindowPosition] = useState({ x: 0, y: 0 });
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   const showToast = useCallback((message: string) => {
     if (toastTimeoutRef.current) {
@@ -46,46 +37,6 @@ const App: React.FC = () => {
       setToastMessage(null);
     }, TOAST_DURATION);
   }, []);
-  
-  useEffect(() => {
-    const isFixedWindow = ![WindowStyle.NORMAL, WindowStyle.FULLSCREEN].includes(windowStyle);
-    if (!isFixedWindow) {
-      setWindowPosition({ x: 0, y: 0 });
-    } else {
-        const maxW = window.innerWidth - 40;
-        const maxH = window.innerHeight - 40;
-        
-        let effectiveWidth: number;
-        let effectiveHeight: number;
-
-        if (windowStyle === WindowStyle.ELLIPSE) {
-            const size = Math.min(windowSize, maxW, maxH);
-            effectiveWidth = size;
-            effectiveHeight = size;
-        } else {
-            effectiveWidth = Math.min(windowSize, maxW);
-            effectiveHeight = effectiveWidth / aspectRatio;
-
-            if (effectiveHeight > maxH) {
-                effectiveHeight = maxH;
-                effectiveWidth = effectiveHeight * aspectRatio;
-            }
-        }
-
-        setWindowPosition({
-           x: (window.innerWidth - effectiveWidth) / 2,
-           y: (window.innerHeight - effectiveHeight) / 2,
-        });
-    }
-  }, [windowStyle, windowSize, aspectRatio]);
-  
-  // This effect listens for browser resize and forces a re-render to recalculate window size/position
-  useEffect(() => {
-    const handleResize = () => setWindowSize(s => s);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
 
   const updateDeviceList = useCallback(async () => {
     try {
@@ -241,16 +192,8 @@ const App: React.FC = () => {
     setWindowStyle(style);
   };
 
-  const handleIncreaseWindowSize = () => setWindowSize(s => s + WINDOW_SIZE_STEP);
-  const handleDecreaseWindowSize = () => setWindowSize(s => Math.max(150, s - WINDOW_SIZE_STEP));
-
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (!shortcutsEnabled) return;
-    
-    if (e.ctrlKey) {
-      if (e.key === 'c' || e.key === 'C') { e.preventDefault(); handleCopyFrame(); }
-      return;
-    }
 
     switch (e.key.toLowerCase()) {
       case 'z': setPictureMode(PictureMode.CONTAIN); break;
@@ -261,26 +204,21 @@ const App: React.FC = () => {
       case 'escape':
         handleSetWindowStyle(WindowStyle.NORMAL); 
         break;
-      case 'e': handleSetWindowStyle(WindowStyle.ELLIPSE); break;
-      case 'r': handleSetWindowStyle(WindowStyle.RECTANGLE); break;
-      case 'w': handleSetWindowStyle(WindowStyle.ROUNDED); break;
       case 'f':
-        handleSetWindowStyle(WindowStyle.FULLSCREEN);
+        handleSetWindowStyle(
+          windowStyle === WindowStyle.FULLSCREEN 
+            ? WindowStyle.NORMAL 
+            : WindowStyle.FULLSCREEN
+        );
         break;
       case 'h': setFlipHorizontal(f => !f); break;
       case 'v': setFlipVertical(f => !f); break;
-      case 'arrowup': setOpacity(o => Math.min(1, o + OPACITY_STEP)); break;
-      case 'arrowdown': setOpacity(o => Math.max(0.2, o - OPACITY_STEP)); break;
-      case 'arrowright': setOpacity(1); break;
-      case 'arrowleft': setOpacity(0.2); break;
-      case '+': handleIncreaseWindowSize(); break;
-      case '-': handleDecreaseWindowSize(); break;
       case 'i': handleCopyFrame(); break;
       case 'd': handleDelayedCopyFrame(); break;
       case 'pageup': setZoom(z => Math.min(5, z + ZOOM_STEP)); break;
       case 'pagedown': setZoom(z => Math.max(0.1, z - ZOOM_STEP)); break;
     }
-  }, [handleCopyFrame, handleDelayedCopyFrame, shortcutsEnabled]);
+  }, [handleCopyFrame, handleDelayedCopyFrame, shortcutsEnabled, windowStyle]);
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -295,103 +233,18 @@ const App: React.FC = () => {
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
     };
   }, [handleKeyDown, windowStyle]);
-  
-  const handleMouseDown = (e: React.MouseEvent) => {
-    if (windowStyle === WindowStyle.NORMAL || windowStyle === WindowStyle.FULLSCREEN) return;
-    e.preventDefault();
-    setIsDragging(true);
-    setDragStart({
-        x: e.clientX - windowPosition.x,
-        y: e.clientY - windowPosition.y,
-    });
-  };
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-      if (isDragging) {
-          setWindowPosition({
-              x: e.clientX - dragStart.x,
-              y: e.clientY - dragStart.y,
-          });
-      }
-  }, [isDragging, dragStart.x, dragStart.y]);
-
-  const handleMouseUp = useCallback(() => {
-      setIsDragging(false);
-  }, []);
-
-  useEffect(() => {
-      if (isDragging) {
-          window.addEventListener('mousemove', handleMouseMove);
-          window.addEventListener('mouseup', handleMouseUp);
-          window.addEventListener('mouseleave', handleMouseUp);
-      }
-      return () => {
-          window.removeEventListener('mousemove', handleMouseMove);
-          window.removeEventListener('mouseup', handleMouseUp);
-          window.removeEventListener('mouseleave', handleMouseUp);
-      };
-  }, [isDragging, handleMouseMove, handleMouseUp]);
 
   const closeSettingsMenu = () => setIsSettingsOpen(false);
-
-  const handleVideoMetadata = (e: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-    const video = e.currentTarget;
-    if (video.videoWidth > 0) {
-      setAspectRatio(video.videoWidth / video.videoHeight);
-    }
-  };
   
   const videoStyle: React.CSSProperties = {
     transform: `scale(${zoom}) scaleX(${flipHorizontal ? -1 : 1}) scaleY(${flipVertical ? -1 : 1})`,
     objectFit: pictureMode,
   };
-  
-  const isFixedWindow = ![WindowStyle.NORMAL, WindowStyle.FULLSCREEN].includes(windowStyle);
-  
-  const maxW = window.innerWidth - 40;
-  const maxH = window.innerHeight - 40;
-  let effectiveWidth: number;
-  let effectiveHeight: number;
-
-  if (windowStyle === WindowStyle.ELLIPSE) {
-      const size = Math.min(windowSize, maxW, maxH);
-      effectiveWidth = size;
-      effectiveHeight = size;
-  } else {
-      effectiveWidth = Math.min(windowSize, maxW);
-      effectiveHeight = effectiveWidth / aspectRatio;
-
-      if (effectiveHeight > maxH) {
-          effectiveHeight = maxH;
-          effectiveWidth = effectiveHeight * aspectRatio;
-      }
-  }
-
-
-  const windowContainerStyle: React.CSSProperties = {
-    opacity,
-    ...(isFixedWindow && {
-      position: 'absolute',
-      width: `${effectiveWidth}px`,
-      height: `${effectiveHeight}px`,
-      transform: `translate(${windowPosition.x}px, ${windowPosition.y}px)`,
-      cursor: isDragging ? 'grabbing' : 'grab',
-    })
-  };
-  
-  const clippingMaskStyle: React.CSSProperties = {
-    borderRadius: windowStyle === WindowStyle.ELLIPSE ? '50%' : (windowStyle === WindowStyle.ROUNDED ? '2rem' : '0'),
-  };
 
   return (
     <div className="w-screen h-screen bg-black overflow-hidden relative group">
-      <div 
-        ref={windowRef}
-        className={`transition-all duration-200 ${isFixedWindow ? '' : 'w-full h-full'}`}
-        style={windowContainerStyle}
-        onMouseDown={handleMouseDown}
-        >
-          <div className="w-full h-full overflow-hidden transition-all duration-300 bg-gray-900 flex items-center justify-center" style={clippingMaskStyle}>
+      <div className="w-full h-full">
+          <div className="w-full h-full overflow-hidden bg-gray-900 flex items-center justify-center">
             {error ? (
               <div className="text-center p-4">
                 <h1 className="text-2xl font-bold text-red-500 mb-2">Camera Error</h1>
@@ -404,7 +257,6 @@ const App: React.FC = () => {
                 playsInline
                 className="w-full h-full transition-transform duration-200"
                 style={videoStyle}
-                onLoadedMetadata={handleVideoMetadata}
               />
             ) : (
               <p className="text-xl animate-pulse">Initializing Camera...</p>
@@ -441,13 +293,8 @@ const App: React.FC = () => {
           onDelayedCopyFrame={handleDelayedCopyFrame}
           onZoomIn={() => setZoom(z => Math.min(5, z + ZOOM_STEP))}
           onZoomOut={() => setZoom(z => Math.max(0.1, z - ZOOM_STEP))}
-          onIncreaseOpacity={() => setOpacity(o => Math.min(1, o + OPACITY_STEP))}
-          onDecreaseOpacity={() => setOpacity(o => Math.max(0.2, o - OPACITY_STEP))}
-          onSetOpacity={setOpacity}
           shortcutsEnabled={shortcutsEnabled}
           onToggleShortcuts={() => setShortcutsEnabled(s => !s)}
-          onIncreaseWindowSize={handleIncreaseWindowSize}
-          onDecreaseWindowSize={handleDecreaseWindowSize}
           />
       )}
       

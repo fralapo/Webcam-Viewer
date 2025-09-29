@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import type { ContextMenuProps } from '../types';
 import { PictureMode, WindowStyle } from '../types';
-import { CameraIcon, StretchIcon, CenterIcon, ContainIcon, CoverIcon, FlipHorizontalIcon, FlipVerticalIcon, CopyIcon, TimerIcon, ZoomInIcon, ZoomOutIcon, CheckIcon, RectangleIcon, EllipseIcon, RoundedRectangleIcon, FullscreenIcon, NormalWindowIcon, OpacityUpIcon, OpacityDownIcon, OpacityMaxIcon, OpacityMinIcon, EnlargeIcon, ShrinkIcon, KeyboardIcon, ChevronRightIcon } from './Icons';
+import { CameraIcon, StretchIcon, CenterIcon, ContainIcon, CoverIcon, FlipHorizontalIcon, FlipVerticalIcon, CopyIcon, TimerIcon, ZoomInIcon, ZoomOutIcon, CheckIcon, FullscreenIcon, NormalWindowIcon, KeyboardIcon } from './Icons';
 import ContextMenuDropdown from './ContextMenuDropdown';
 
 const ContextMenuItem: React.FC<{ onClick: () => void; children: React.ReactNode; shortcut?: string; selected?: boolean; disabled?: boolean; }> = ({ onClick, children, shortcut, selected, disabled }) => (
@@ -31,9 +31,6 @@ const pictureModeOptions = {
 
 const windowStyleOptions = {
     [WindowStyle.NORMAL]: { label: 'Normal', icon: <NormalWindowIcon />, shortcut: 'N/Esc' },
-    [WindowStyle.ELLIPSE]: { label: 'Circle', icon: <EllipseIcon />, shortcut: 'E' },
-    [WindowStyle.RECTANGLE]: { label: 'Rectangle', icon: <RectangleIcon />, shortcut: 'R' },
-    [WindowStyle.ROUNDED]: { label: 'Rounded', icon: <RoundedRectangleIcon />, shortcut: 'W' },
     [WindowStyle.FULLSCREEN]: { label: 'Full Screen', icon: <FullscreenIcon />, shortcut: 'F' },
 }
 
@@ -41,9 +38,7 @@ const ContextMenu: React.FC<ContextMenuProps> = (props) => {
   const {
     onClose, devices, currentDeviceId, onSwitchCamera, pictureMode, onSetPictureMode,
     windowStyle, onSetWindowStyle, flipHorizontal, onToggleFlipHorizontal, flipVertical, onToggleFlipVertical,
-    onIncreaseOpacity, onDecreaseOpacity, onSetOpacity, onCopyFrame, onDelayedCopyFrame,
-    onZoomIn, onZoomOut, shortcutsEnabled, onToggleShortcuts,
-    onIncreaseWindowSize, onDecreaseWindowSize
+    onCopyFrame, onDelayedCopyFrame, onZoomIn, onZoomOut, shortcutsEnabled, onToggleShortcuts
   } = props;
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -66,7 +61,6 @@ const ContextMenu: React.FC<ContextMenuProps> = (props) => {
   
   const currentDevice = devices.find(d => d.deviceId === currentDeviceId);
   const currentDeviceLabel = currentDevice?.label || (currentDeviceId ? `Camera ${devices.findIndex(d => d.deviceId === currentDeviceId) + 1}` : 'Select Camera');
-  const isFixedWindow = ![WindowStyle.NORMAL, WindowStyle.FULLSCREEN].includes(windowStyle);
 
   return (
     <div
@@ -141,20 +135,8 @@ const ContextMenu: React.FC<ContextMenuProps> = (props) => {
       <ContextMenuItem onClick={() => handleAction(onZoomOut)} shortcut="PgDn"><ZoomOutIcon /> Zoom Out</ContextMenuItem>
       <ContextMenuSeparator />
 
-      <div className="text-xs text-gray-400 px-4 pt-1 pb-2 font-semibold">WINDOW SIZE</div>
-      <ContextMenuItem onClick={() => handleAction(onIncreaseWindowSize)} shortcut="+" disabled={!isFixedWindow}><EnlargeIcon /> Increase</ContextMenuItem>
-      <ContextMenuItem onClick={() => handleAction(onDecreaseWindowSize)} shortcut="-" disabled={!isFixedWindow}><ShrinkIcon /> Decrease</ContextMenuItem>
-      <ContextMenuSeparator />
-      
-      <div className="text-xs text-gray-400 px-4 pt-1 pb-2 font-semibold">OPACITY</div>
-      <ContextMenuItem onClick={() => handleAction(onIncreaseOpacity)} shortcut="Up"><OpacityUpIcon /> Increase</ContextMenuItem>
-      <ContextMenuItem onClick={() => handleAction(onDecreaseOpacity)} shortcut="Down"><OpacityDownIcon /> Decrease</ContextMenuItem>
-      <ContextMenuItem onClick={() => handleAction(() => onSetOpacity(1))} shortcut="Right"><OpacityMaxIcon /> Max (100%)</ContextMenuItem>
-      <ContextMenuItem onClick={() => handleAction(() => onSetOpacity(0.2))} shortcut="Left"><OpacityMinIcon /> Min (20%)</ContextMenuItem>
-      <ContextMenuSeparator />
-
       <div className="text-xs text-gray-400 px-4 pt-1 pb-2 font-semibold">ACTIONS</div>
-      <ContextMenuItem onClick={() => handleAction(onCopyFrame)} shortcut="I / C-C"><CopyIcon /> Copy Frame</ContextMenuItem>
+      <ContextMenuItem onClick={() => handleAction(onCopyFrame)} shortcut="I"><CopyIcon /> Copy Frame</ContextMenuItem>
       <ContextMenuItem onClick={() => handleAction(onDelayedCopyFrame)} shortcut="D"><TimerIcon /> Copy with 5s Delay</ContextMenuItem>
     </div>
   );
