@@ -1,11 +1,49 @@
-<div align="center">
+# Webcam Viewer
 
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+A simple, modern, and privacy-focused web application to view your webcam feed directly in your browser. Right-click on the video feed or use the settings icon to access settings, switch cameras, and use various display modes.
 
-  <h1>Built with AI Studio</h2>
+All video processing is done client-side in your browser. Your webcam feed is never sent to any server.
 
-  <p>The fastest path from prompt to production with Gemini.</p>
+## Features
 
-  <a href="https://aistudio.google.com/apps">Start building</a>
+*   **Camera Selection**: Easily switch between all available cameras.
+*   **Privacy First**: Your video feed never leaves your computer.
+*   **Multiple Display Modes**:
+    *   **Picture Mode**: Control how the video fits the window (`Zoom`, `Stretch`, `Center`, `Alt.Stretch`).
+    *   **Window Style**: View your camera in a `Normal` window, `Full Screen`, or in draggable shapes like `Ellipse`, `Rectangle`, and `Rounded`.
+*   **Transform Controls**:
+    *   Flip the video horizontally or vertically.
+    *   Zoom in and out of the video feed.
+*   **Opacity Control**: Make the window semi-transparent to see what's behind it.
+*   **Clipboard Integration**:
+    *   Copy the current frame to the clipboard instantly.
+    *   Copy with a 5-second delay.
+    *   View an image directly from your clipboard.
+*   **Always on Top**: Use the browser's Picture-in-Picture feature to keep the webcam view on top of other windows.
+*   **Keyboard Shortcuts**: A comprehensive set of shortcuts for quick access to all features.
 
-</div>
+## Keyboard Shortcuts
+
+| Key(s) | Action |
+| :--- | :--- |
+| `Z` | Set Picture Mode to 'Zoom' |
+| `X` | Set Picture Mode to 'Stretch' |
+| `C` | Set Picture Mode to 'Center' |
+| `A` | Set Picture Mode to 'Alt.Stretch' |
+| `N` / `Esc` | Set Window Style to 'Normal' |
+| `E` | Set Window Style to 'Ellipse' |
+| `R` | Set Window Style to 'Rectangle' |
+| `W` | Set Window Style to 'Rounded' |
+| `F` | Toggle 'Full Screen' |
+| `H` | Toggle Horizontal Flip |
+| `V` | Toggle Vertical Flip |
+| `ArrowUp` | Increase Opacity |
+| `ArrowDown` | Decrease Opacity |
+| `ArrowRight` | Set Opacity to Max (100%) |
+| `ArrowLeft` | Set Opacity to Min (20%) |
+| `PgUp` | Zoom In |
+| `PgDown` | Zoom Out |
+| `I` / `Ctrl+C` | Copy Frame to Clipboard |
+| `D` | Copy Frame with 5s Delay |
+| `G` / `Ctrl+V` | View Image from Clipboard |
+| `T` | Toggle Always on Top (PiP) |

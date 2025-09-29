@@ -1,0 +1,7 @@
+{
+  "name": "Webcam Viewer",
+  "description": "A simple, modern, and privacy-focused web application to view your webcam feed directly in your browser. Right-click on the video feed to access settings, switch cameras, and use various display modes.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
