@@ -4,6 +4,8 @@ A simple, modern, and privacy-focused web application to view your webcam feed d
 
 All video processing is done client-side in your browser. Your webcam feed is never sent to any server.
 
+https://webcamviewer.netlify.app/
+
 ## Features
 
 *   **Camera Selection**: Easily switch between all available cameras.
